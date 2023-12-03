@@ -53,7 +53,7 @@ fn find_first_word_number(line: &String, reverse: bool) -> Option<(usize, u32)> 
 
     if found_numbers.len() > 0 {
         let (word, index) = &found_numbers[0];
-        
+
         let mut real_index = index.unwrap();
         if reverse {
             real_index = index.unwrap() + word.len() - 1;
@@ -73,12 +73,8 @@ fn find_number_by_word_and_digit(line: &String, reverse: bool) -> Option<u32> {
         find_first_number(&line, reverse),
         find_first_word_number(&line, reverse),
     ) {
-        (None, Some((i, n))) => {
-            Some(n)
-        },
-        (Some((i, n)), None) => {
-            Some(n)
-        },
+        (None, Some((_, n))) => Some(n),
+        (Some((_, n)), None) => Some(n),
         (Some((i0, n0)), Some((i1, n1))) => {
             if i0 < i1 {
                 Some(n0)
@@ -102,7 +98,7 @@ fn main() -> io::Result<()> {
         let line = l?;
 
         let mut num = "".to_string();
-        
+
         let first_number = find_number_by_word_and_digit(&line, false);
         if let Some(n) = first_number {
             num.push(n.to_string().chars().nth(0).unwrap());
@@ -143,15 +139,27 @@ mod tests {
             find_first_number(&"a1b2c3d4e5f".to_string(), false),
             Some((1, 1))
         );
-        assert_eq!(find_first_number(&"treb7uchet".to_string(), false), Some((4, 7)));
+        assert_eq!(
+            find_first_number(&"treb7uchet".to_string(), false),
+            Some((4, 7))
+        );
     }
 
     #[test]
     fn test_find_first_number_reverse() {
         assert_eq!(find_first_number(&"1abc2".to_string(), true), Some((0, 2)));
-        assert_eq!(find_first_number(&"pqr3stu8vwx".to_string(), true), Some((3, 8)));
-        assert_eq!(find_first_number(&"a1b2c3d4e5f".to_string(), true), Some((1, 5)));
-        assert_eq!(find_first_number(&"treb7uchet".to_string(), true), Some((5, 7)));
+        assert_eq!(
+            find_first_number(&"pqr3stu8vwx".to_string(), true),
+            Some((3, 8))
+        );
+        assert_eq!(
+            find_first_number(&"a1b2c3d4e5f".to_string(), true),
+            Some((1, 5))
+        );
+        assert_eq!(
+            find_first_number(&"treb7uchet".to_string(), true),
+            Some((5, 7))
+        );
     }
 
     #[test]
@@ -272,7 +280,7 @@ mod tests {
         assert_eq!(
             find_number_by_word_and_digit(
                 &"mhrckkcgqdms1rvrfcvpsn3trmfltvbhr4sixlpslr".to_string(),
-                true 
+                true
             ),
             Some(6)
         );
